@@ -1,4 +1,4 @@
-import Rect from './Rect';
+import Rect from "./Rect";
 
 class CropRectCalculator {
   readonly cropRect: Rect;
@@ -7,13 +7,19 @@ class CropRectCalculator {
   readonly minHeight: number;
   readonly imageRect: Rect;
   readonly fix: {
-    top: boolean,
-    left: boolean,
-    bottom: boolean,
-    right: boolean,
+    top: boolean;
+    left: boolean;
+    bottom: boolean;
+    right: boolean;
   };
 
-  constructor(cropRect: Rect, ratio: number | undefined, minWidth: number, minHeight: number, imageRect: Rect) {
+  constructor(
+    cropRect: Rect,
+    ratio: number | undefined,
+    minWidth: number,
+    minHeight: number,
+    imageRect: Rect,
+  ) {
     this.cropRect = cropRect;
     this.ratio = ratio;
     this.minHeight = minHeight;
@@ -190,7 +196,6 @@ class CropRectCalculator {
       } else {
         this.cropRect.height = newHeight;
       }
-
     }
 
     this.cropRect.top += amount;
@@ -240,7 +245,6 @@ class CropRectCalculator {
       this.cropRect.top -= amount;
     }
 
-
     if (this.cropRect.bottom > this.imageRect.bottom) {
       const maxDiff = this.cropRect.bottom - this.imageRect.bottom;
       this.cropRect.height -= maxDiff;
@@ -277,6 +281,5 @@ class CropRectCalculator {
     return this.cropRect.toObject();
   }
 }
-
 
 export default CropRectCalculator;
