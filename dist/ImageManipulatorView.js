@@ -7,19 +7,23 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-import React, { Component } from 'react';
-import { Dimensions, Image, ScrollView, Modal, View, Text, SafeAreaView, TouchableOpacity, LogBox, } from 'react-native';
-import * as ImageManipulator from 'expo-image-manipulator';
-import * as FileSystem from 'expo-file-system';
-import AutoHeightImage from 'react-native-auto-height-image';
-import ImageCropOverlay from './ImageCropOverlay';
-import { MaterialIcons, MaterialCommunityIcons, FontAwesome } from '@expo/vector-icons';
-const { width: screenWidth } = Dimensions.get('window');
-LogBox.ignoreLogs(['componentWillReceiveProps', 'componentWillUpdate', 'componentWillMount']);
+import React, { Component } from "react";
+import { Dimensions, Image, LogBox, Modal, SafeAreaView, ScrollView, Text, TouchableOpacity, View, } from "react-native";
+import * as ImageManipulator from "expo-image-manipulator";
+import * as FileSystem from "expo-file-system";
+import AutoHeightImage from "react-native-auto-height-image";
+import ImageCropOverlay from "./ImageCropOverlay";
+import { FontAwesome, MaterialCommunityIcons, MaterialIcons, } from "@expo/vector-icons";
+const { width: screenWidth } = Dimensions.get("window");
 LogBox.ignoreLogs([
-    'Warning: componentWillMount is deprecated',
-    'Warning: componentWillReceiveProps is deprecated',
-    'Module RCTImageLoader requires',
+    "componentWillReceiveProps",
+    "componentWillUpdate",
+    "componentWillMount",
+]);
+LogBox.ignoreLogs([
+    "Warning: componentWillMount is deprecated",
+    "Warning: componentWillReceiveProps is deprecated",
+    "Module RCTImageLoader requires",
 ]);
 class ImageManipulatorView extends Component {
     constructor(props) {
@@ -33,16 +37,16 @@ class ImageManipulatorView extends Component {
             safeAreaHeight: 0,
             imageLayout: { x: 0, y: 0, width: 0, height: 0 },
             enableScroll: true,
-            scrollOffsetY: 0
+            scrollOffsetY: 0,
         };
         this.onGetCorrectSizes = (w, h) => {
             const sizes = {
                 convertedWidth: w,
-                convertedheight: h,
+                convertedHeight: h,
             };
             const ratio = Math.min(1920 / w, 1080 / h);
             sizes.convertedWidth = Math.round(w * ratio);
-            sizes.convertedheight = Math.round(h * ratio);
+            sizes.convertedHeight = Math.round(h * ratio);
             return sizes;
         };
         this.onToggleModal = () => {
@@ -63,15 +67,18 @@ class ImageManipulatorView extends Component {
                 if (cropObj.height > 0 && cropObj.width > 0) {
                     let uriToCrop = uri;
                     if (this.isRemote) {
-                        const response = yield FileSystem.downloadAsync(uri, FileSystem.documentDirectory + 'image');
+                        const response = yield FileSystem.downloadAsync(uri, FileSystem.documentDirectory + "image");
                         uriToCrop = response.uri;
                     }
                     const { uri: uriCroped, base64, width: croppedWidth, height: croppedHeight, } = yield this.crop(cropObj, uriToCrop);
                     this.actualSize.width = croppedWidth;
                     this.actualSize.height = croppedHeight;
                     this.setState({
-                        uri: uriCroped, base64, cropMode: false, processing: false,
-                    }, () => this.cropped = true);
+                        uri: uriCroped,
+                        base64,
+                        cropMode: false,
+                        processing: false,
+                    }, () => (this.cropped = true));
                 }
                 else {
                     this.setState({ cropMode: false, processing: false });
@@ -85,11 +92,11 @@ class ImageManipulatorView extends Component {
             }
             let uriToCrop = uri;
             if (this.isRemote) {
-                const response = yield FileSystem.downloadAsync(uri, FileSystem.documentDirectory + 'image');
+                const response = yield FileSystem.downloadAsync(uri, FileSystem.documentDirectory + "image");
                 uriToCrop = response.uri;
             }
             Image.getSize(uri, (width, _height) => __awaiter(this, void 0, void 0, function* () {
-                const { uri: rotUri, base64 } = yield this.rotate(uriToCrop, width);
+                const { uri: rotUri, base64 } = yield this.rotate(uriToCrop);
                 this.setState({ uri: rotUri, base64 });
             }));
         });
@@ -100,7 +107,7 @@ class ImageManipulatorView extends Component {
             }
             let uriToCrop = uri;
             if (this.isRemote) {
-                const response = yield FileSystem.downloadAsync(uri, FileSystem.documentDirectory + 'image');
+                const response = yield FileSystem.downloadAsync(uri, FileSystem.documentDirectory + "image");
                 uriToCrop = response.uri;
             }
             Image.getSize(uri, () => __awaiter(this, void 0, void 0, function* () {
@@ -123,28 +130,30 @@ class ImageManipulatorView extends Component {
         };
         this.filp = (uri, orientation) => __awaiter(this, void 0, void 0, function* () {
             const { saveOptions } = this.props;
-            const manipResult = yield ImageManipulator.manipulateAsync(uri, [{
+            return yield ImageManipulator.manipulateAsync(uri, [
+                {
                     flip: orientation,
-                }], saveOptions);
-            return manipResult;
+                },
+            ], saveOptions);
         });
-        this.rotate = (uri, width) => __awaiter(this, void 0, void 0, function* () {
+        this.rotate = (uri) => __awaiter(this, void 0, void 0, function* () {
             const { saveOptions } = this.props;
-            return yield ImageManipulator.manipulateAsync(uri, [{ rotate: -90 }, { resize: { width: width } }], saveOptions);
+            return yield ImageManipulator.manipulateAsync(uri, [{ rotate: -90 }], saveOptions);
         });
         this.crop = (cropObj, uri) => __awaiter(this, void 0, void 0, function* () {
             const { saveOptions } = this.props;
             if (cropObj.height > 0 && cropObj.width > 0) {
-                const manipResult = yield ImageManipulator.manipulateAsync(uri, [{
+                return yield ImageManipulator.manipulateAsync(uri, [
+                    {
                         crop: cropObj,
-                    }], saveOptions);
-                return manipResult;
+                    },
+                ], saveOptions);
             }
             return {
                 uri: uri,
                 base64: undefined,
                 width: 0,
-                height: 0
+                height: 0,
             };
         });
         this.state = Object.assign({}, this.initialState);
@@ -180,14 +189,17 @@ class ImageManipulatorView extends Component {
         return __awaiter(this, void 0, void 0, function* () {
             this.initializeVariables();
             this.setState(this.initialState, () => {
-                const { photo: { uri: rawUri }, saveOptions } = this.props;
+                const { photo: { uri: rawUri }, saveOptions, } = this.props;
+                if (rawUri === undefined || rawUri === null || rawUri === "") {
+                    return;
+                }
                 Image.getSize(rawUri, (imgW, imgH) => __awaiter(this, void 0, void 0, function* () {
-                    const { convertedWidth, convertedheight } = this.onGetCorrectSizes(imgW, imgH);
-                    const { uri, width: w, height } = yield ImageManipulator.manipulateAsync(rawUri, [
+                    const { convertedWidth, convertedHeight } = this.onGetCorrectSizes(imgW, imgH);
+                    const { uri, width: w, height, } = yield ImageManipulator.manipulateAsync(rawUri, [
                         {
                             resize: {
                                 width: convertedWidth,
-                                height: convertedheight,
+                                height: convertedHeight,
                             },
                         },
                     ], saveOptions);
@@ -203,21 +215,10 @@ class ImageManipulatorView extends Component {
     get isRemote() {
         const { uri } = this.state;
         if (!uri) {
-            throw new Error('state.uri is still undefined.');
+            throw new Error("state.uri is still undefined.");
         }
         return /^(http|https|ftp)?(?:[:/]*)([a-z0-9.-]*)(?::([0-9]+))?(\/[^?#]*)?(?:\?([^#]*))?(?:#(.*))?$/.test(uri);
     }
-    // calculateMaxSizes = (event) => {
-    //     const { fixedSquareAspect } = this.state
-    //     let w1 = event.nativeEvent.layout.width || 100
-    //     let h1 = event.nativeEvent.layout.height || 100
-    //     if (fixedSquareAspect) {
-    //         if (w1 < h1) h1 = w1
-    //         else w1 = h1
-    //     }
-    //     this.maxSizes.width = w1
-    //     this.maxSizes.height = h1
-    // };
     // eslint-disable-next-line camelcase
     UNSAFE_componentWillReceiveProps(newProps) {
         return __awaiter(this, void 0, void 0, function* () {
@@ -227,17 +228,11 @@ class ImageManipulatorView extends Component {
     componentWillUnmount() {
         this.mounted = false;
     }
-    zoomImage() {
-        // this.refs.imageScrollView.zoomScale = 5
-        // this.setState({width: screenWidth})
-        // this.setState({zoomScale: 5})
-        // this.setState(curHeight)
-    }
     render() {
-        const { isVisible, onPictureChoosed, onBeforePictureChoosed, borderColor, allowRotate = true, allowFlip = true, btnTexts, fixedMask, ratio, } = this.props;
-        const { uri, base64, cropMode, processing, } = this.state;
+        const { isVisible, onPictureChosen, onBeforePictureChosen, borderColor, allowRotate = true, allowFlip = true, btnTexts, fixedMask, ratio, } = this.props;
+        const { uri, base64, cropMode, processing } = this.state;
         const imageRatio = this.actualSize.height / this.actualSize.width;
-        const screenHeight = Dimensions.get('window').height - this.state.safeAreaHeight;
+        const screenHeight = Dimensions.get("window").height - this.state.safeAreaHeight;
         const screenRatio = screenHeight / screenWidth;
         let cropWidth = screenWidth;
         let cropHeight = imageRatio < screenRatio ? screenWidth * imageRatio : screenHeight - 200;
@@ -258,7 +253,9 @@ class ImageManipulatorView extends Component {
                 cropMinHeight = cropMinWidth * cropRatio;
             }
         }
-        const cropInitialTop = ((Math.min(this.state.imageLayout.height, screenHeight) - cropHeight) / 2.0) + this.state.scrollOffsetY;
+        const cropInitialTop = (Math.min(this.state.imageLayout.height, screenHeight) - cropHeight) /
+            2.0 +
+            this.state.scrollOffsetY;
         const cropInitialLeft = (screenWidth - cropWidth) / 2.0;
         if (this.currentSize.width === 0 && cropMode) {
             this.currentSize.width = cropWidth;
@@ -270,79 +267,132 @@ class ImageManipulatorView extends Component {
                 this.onToggleModal();
             } },
             React.createElement(SafeAreaView, { style: {
-                    width: screenWidth, flexDirection: 'row', backgroundColor: 'black', justifyContent: 'space-between',
-                }, onLayout: e => this.setState({ safeAreaHeight: e.nativeEvent.layout.height }) },
+                    width: screenWidth,
+                    flexDirection: "row",
+                    backgroundColor: "black",
+                    justifyContent: "space-between",
+                }, onLayout: (e) => this.setState({ safeAreaHeight: e.nativeEvent.layout.height }) },
                 React.createElement(ScrollView, { scrollEnabled: false, horizontal: true, contentContainerStyle: {
-                        width: '100%', paddingHorizontal: 15, height: 44, alignItems: 'center',
-                    } }, !cropMode
-                    ? (React.createElement(View, { style: { flexDirection: 'row', alignItems: 'center' } },
-                        React.createElement(TouchableOpacity, { onPress: () => this.onToggleModal(), style: {
-                                width: 32, height: 32, alignItems: 'center', justifyContent: 'center',
-                            } }, this.props.icons.back),
-                        React.createElement(View, { style: { flex: 1, flexDirection: 'row', justifyContent: 'flex-end' } },
-                            React.createElement(TouchableOpacity, { onPress: () => this.setState({ cropMode: true }), style: {
-                                    marginLeft: 10, width: 32, height: 32, alignItems: 'center', justifyContent: 'center',
-                                } },
-                                React.createElement(MaterialCommunityIcons, { size: 20, name: "crop", color: "white" })),
-                            allowRotate
-                                && (React.createElement(View, { style: { flexDirection: 'row' } },
-                                    React.createElement(TouchableOpacity, { onPress: () => this.onRotateImage(), style: {
-                                            marginLeft: 10, width: 32, height: 32, alignItems: 'center', justifyContent: 'center',
-                                        } },
-                                        React.createElement(MaterialCommunityIcons, { size: 20, name: "rotate-left", color: "white" })),
-                                    React.createElement(TouchableOpacity, { onPress: () => this.onFlipImage(ImageManipulator.FlipType.Vertical), style: {
-                                            marginLeft: 10, width: 32, height: 32, alignItems: 'center', justifyContent: 'center',
-                                        } },
-                                        React.createElement(MaterialIcons, { style: { transform: [{ rotate: '270deg' }] }, size: 20, name: "flip", color: "white" })))),
-                            allowFlip
-                                && (React.createElement(View, { style: { flexDirection: 'row' } },
-                                    React.createElement(TouchableOpacity, { onPress: () => this.onFlipImage(ImageManipulator.FlipType.Horizontal), style: {
-                                            marginLeft: 10, width: 32, height: 32, alignItems: 'center', justifyContent: 'center',
-                                        } },
-                                        React.createElement(MaterialIcons, { size: 20, name: "flip", color: "white" })),
-                                    React.createElement(TouchableOpacity, { onPress: () => {
-                                            if (uri) {
-                                                Image.getSize(uri, (width, height) => {
-                                                    let success = true;
-                                                    const data = {
-                                                        uri,
-                                                        base64,
-                                                        width,
-                                                        height,
-                                                        cropped: this.cropped
-                                                    };
-                                                    if (onBeforePictureChoosed) {
-                                                        success = onBeforePictureChoosed(data);
-                                                    }
-                                                    ;
-                                                    if (success) {
-                                                        onPictureChoosed(data);
-                                                        this.onToggleModal();
-                                                    }
-                                                });
-                                            }
-                                        }, style: {
-                                            marginLeft: 10, width: 60, height: 32, alignItems: 'center', justifyContent: 'center',
-                                        } },
-                                        React.createElement(Text, { style: { fontWeight: '500', color: 'white', fontSize: 18 } }, btnTexts.done)))))))
-                    : (React.createElement(View, { style: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' } },
-                        React.createElement(TouchableOpacity, { onPress: () => this.setState({ cropMode: false }), style: {
-                                width: 32, height: 32, alignItems: 'center', justifyContent: 'center',
-                            } }, this.props.icons.back),
-                        React.createElement(TouchableOpacity, { onPress: () => this.onCropImage(), style: {
-                                marginRight: 10, alignItems: 'flex-end', flex: 1,
+                        width: "100%",
+                        paddingHorizontal: 15,
+                        height: 44,
+                        alignItems: "center",
+                    } }, !cropMode ? (React.createElement(View, { style: { flexDirection: "row", alignItems: "center" } },
+                    React.createElement(TouchableOpacity, { onPress: () => this.onToggleModal(), style: {
+                            width: 32,
+                            height: 32,
+                            alignItems: "center",
+                            justifyContent: "center",
+                        } }, this.props.icons.back),
+                    React.createElement(View, { style: {
+                            flex: 1,
+                            flexDirection: "row",
+                            justifyContent: "flex-end",
+                        } },
+                        React.createElement(TouchableOpacity, { onPress: () => this.setState({ cropMode: true }), style: {
+                                marginLeft: 10,
+                                width: 32,
+                                height: 32,
+                                alignItems: "center",
+                                justifyContent: "center",
                             } },
-                            React.createElement(View, { style: { flexDirection: 'row', alignItems: 'center' } },
-                                processing ?
-                                    this.props.icons.processing
-                                    :
-                                        this.props.icons.crop,
-                                React.createElement(Text, { style: { fontWeight: '500', color: 'white', fontSize: 18 } }, !processing ? btnTexts.crop : btnTexts.processing))))))),
-            React.createElement(View, { style: { flex: 1, backgroundColor: 'black', width: Dimensions.get('window').width } },
-                React.createElement(ScrollView, { style: { position: 'relative', flex: 1 }, contentContainerStyle: { backgroundColor: 'black', justifyContent: 'center' }, bounces: false, scrollEnabled: this.state.enableScroll, onScrollEndDrag: e => this.setState({ scrollOffsetY: e.nativeEvent.contentOffset.y }) },
-                    uri &&
-                        React.createElement(AutoHeightImage, { source: { uri }, resizeMode: 'contain', width: screenWidth, onLayout: e => this.setState({ imageLayout: e.nativeEvent.layout }) }),
-                    !!cropMode && (React.createElement(ImageCropOverlay, { onStartLayoutChange: () => this.setState({ enableScroll: false }), onLayoutChanged: (top, left, width, height) => {
+                            React.createElement(MaterialCommunityIcons, { size: 20, name: "crop", color: "white" })),
+                        allowRotate && (React.createElement(View, { style: { flexDirection: "row" } },
+                            React.createElement(TouchableOpacity, { onPress: () => this.onRotateImage(), style: {
+                                    marginLeft: 10,
+                                    width: 32,
+                                    height: 32,
+                                    alignItems: "center",
+                                    justifyContent: "center",
+                                } },
+                                React.createElement(MaterialCommunityIcons, { size: 20, name: "rotate-left", color: "white" })),
+                            React.createElement(TouchableOpacity, { onPress: () => this.onFlipImage(ImageManipulator.FlipType.Vertical), style: {
+                                    marginLeft: 10,
+                                    width: 32,
+                                    height: 32,
+                                    alignItems: "center",
+                                    justifyContent: "center",
+                                } },
+                                React.createElement(MaterialIcons, { style: { transform: [{ rotate: "270deg" }] }, size: 20, name: "flip", color: "white" })))),
+                        allowFlip && (React.createElement(View, { style: { flexDirection: "row" } },
+                            React.createElement(TouchableOpacity, { onPress: () => this.onFlipImage(ImageManipulator.FlipType.Horizontal), style: {
+                                    marginLeft: 10,
+                                    width: 32,
+                                    height: 32,
+                                    alignItems: "center",
+                                    justifyContent: "center",
+                                } },
+                                React.createElement(MaterialIcons, { size: 20, name: "flip", color: "white" })),
+                            React.createElement(TouchableOpacity, { onPress: () => {
+                                    if (uri) {
+                                        Image.getSize(uri, (width, height) => {
+                                            let success = true;
+                                            const data = {
+                                                uri,
+                                                base64,
+                                                width,
+                                                height,
+                                                cropped: this.cropped,
+                                            };
+                                            if (onBeforePictureChosen) {
+                                                success = onBeforePictureChosen(data);
+                                            }
+                                            if (success) {
+                                                onPictureChosen(data);
+                                                this.onToggleModal();
+                                            }
+                                        });
+                                    }
+                                }, style: {
+                                    marginLeft: 10,
+                                    width: 60,
+                                    height: 32,
+                                    alignItems: "center",
+                                    justifyContent: "center",
+                                } },
+                                React.createElement(Text, { style: [
+                                        {
+                                            fontWeight: "500",
+                                            color: "white",
+                                            fontSize: 18,
+                                        },
+                                        this.props.btnTextsStyle,
+                                    ] }, btnTexts.done))))))) : (React.createElement(View, { style: {
+                        flexDirection: "row",
+                        justifyContent: "space-between",
+                        alignItems: "center",
+                    } },
+                    React.createElement(TouchableOpacity, { onPress: () => this.setState({ cropMode: false }), style: {
+                            width: 32,
+                            height: 32,
+                            alignItems: "center",
+                            justifyContent: "center",
+                        } }, this.props.icons.back),
+                    React.createElement(TouchableOpacity, { onPress: () => this.onCropImage(), style: {
+                            marginRight: 10,
+                            alignItems: "flex-end",
+                            flex: 1,
+                        } },
+                        React.createElement(View, { style: { flexDirection: "row", alignItems: "center" } },
+                            processing
+                                ? this.props.icons.processing
+                                : this.props.icons.crop,
+                            React.createElement(Text, { style: {
+                                    fontWeight: "500",
+                                    color: "white",
+                                    fontSize: 18,
+                                } }, !processing ? btnTexts.crop : btnTexts.processing))))))),
+            React.createElement(View, { style: {
+                    flex: 1,
+                    backgroundColor: "black",
+                    width: Dimensions.get("window").width,
+                } },
+                React.createElement(ScrollView, { style: { position: "relative", flex: 1 }, contentContainerStyle: {
+                        backgroundColor: "black",
+                        justifyContent: "center",
+                    }, bounces: false, scrollEnabled: this.state.enableScroll, onScrollEndDrag: (e) => this.setState({ scrollOffsetY: e.nativeEvent.contentOffset.y }) },
+                    uri && (React.createElement(AutoHeightImage, { source: { uri }, resizeMode: "contain", width: screenWidth, onLayout: (e) => this.setState({ imageLayout: e.nativeEvent.layout }) })),
+                    cropMode && (React.createElement(ImageCropOverlay, { onStartLayoutChange: () => this.setState({ enableScroll: false }), onLayoutChanged: (top, left, width, height) => {
                             this.currentSize.width = width;
                             this.currentSize.height = height;
                             this.currentPos.top = top;
@@ -352,17 +402,17 @@ class ImageManipulatorView extends Component {
     }
 }
 ImageManipulatorView.defaultProps = {
-    borderColor: '#a4a4a4',
+    borderColor: "#a4a4a4",
     btnTexts: {
-        crop: 'Crop',
-        rotate: 'Rotate',
-        done: 'Done',
-        processing: 'Processing',
+        crop: "Crop",
+        rotate: "Rotate",
+        done: "Done",
+        processing: "Processing",
     },
     icons: {
         back: React.createElement(MaterialIcons, { size: 24, name: "arrow-back-ios", color: "white" }),
-        crop: React.createElement(FontAwesome, { style: { marginRight: 5 }, size: 20, name: 'scissors', color: "white" }),
-        processing: React.createElement(MaterialIcons, { style: { marginRight: 5 }, size: 20, name: 'access-time', color: "white" })
+        crop: (React.createElement(FontAwesome, { style: { marginRight: 5 }, size: 20, name: "scissors", color: "white" })),
+        processing: (React.createElement(MaterialIcons, { style: { marginRight: 5 }, size: 20, name: "access-time", color: "white" })),
     },
     saveOptions: {
         compress: 1,
