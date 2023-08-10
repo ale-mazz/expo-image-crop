@@ -671,11 +671,14 @@ class ImageManipulatorView extends Component<Props, State> {
                       ? this.props.icons.processing
                       : this.props.icons.crop}
                     <Text
-                      style={{
-                        fontWeight: "500",
-                        color: "white",
-                        fontSize: 18,
-                      }}
+                      style={[
+                        {
+                          fontWeight: "500",
+                          color: "white",
+                          fontSize: 18,
+                        },
+                        this.props.btnTextsStyle,
+                      ]}
                     >
                       {!processing ? btnTexts.crop : btnTexts.processing}
                     </Text>
