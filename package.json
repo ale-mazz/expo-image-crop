@@ -1,6 +1,6 @@
 {
   "name": "expo-image-manipulator-view-v2",
-  "version": "4.1.1",
+  "version": "4.1.2",
   "description": "Crop, rotate and flip images without detach your expo project!",
   "main": "index.js",
   "types": "index.d.ts",
