@@ -7,4 +7,5 @@ npm-debug.*
 *.mobileprovision
 package-lock.json
 yarn.lock
-.idea
+.idea/**/*
+```
