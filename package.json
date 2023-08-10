@@ -1,6 +1,6 @@
 {
-  "name": "expo-image-manipulator-view",
-  "version": "4.0.0",
+  "name": "expo-image-manipulator-view-v2",
+  "version": "4.1.1",
   "description": "Crop, rotate and flip images without detach your expo project!",
   "main": "index.js",
   "types": "index.d.ts",
@@ -39,12 +39,12 @@
     "dist"
   ],
   "license": "MIT",
-  "homepage": "https://github.com/gomo/expo-image-crop",
+  "homepage": "https://github.com/ale-mazz/expo-image-crop",
   "bugs": {
-    "url": "https://github.com/gomo/expo-image-crop/issues"
+    "url": "https://github.com/ale-mazz/expo-image-crop/issues"
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/gomo/expo-image-crop"
+    "url": "https://github.com/ale-mazz/expo-image-crop"
   }
 }
