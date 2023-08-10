@@ -332,7 +332,7 @@ class ImageManipulatorView extends Component<Props, State> {
     }
 
     Image.getSize(uri, async () => {
-      const { uri: rotUri, base64 } = await this.filp(uriToCrop, orientation);
+      const { uri: rotUri, base64 } = await this.flip(uriToCrop, orientation);
       this.setState({ uri: rotUri, base64 });
     });
   };
@@ -353,7 +353,7 @@ class ImageManipulatorView extends Component<Props, State> {
     };
   };
 
-  filp = async (
+  flip = async (
     uri: string,
     orientation: ImageManipulator.FlipType,
   ): Promise<ImageManipulator.ImageResult> => {
