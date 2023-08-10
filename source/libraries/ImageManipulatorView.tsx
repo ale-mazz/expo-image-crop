@@ -67,6 +67,7 @@ type Props = {
     processing?: string;
   };
   btnTextsStyle?: any;
+  iconSize?: number;
   icons: {
     back?: ReactNode;
     crop?: ReactNode;
@@ -567,7 +568,7 @@ class ImageManipulatorView extends Component<Props, State> {
                       >
                         <MaterialIcons
                           style={{ transform: [{ rotate: "270deg" }] }}
-                          size={20}
+                          size={this.props.iconSize ?? 20}
                           name="flip"
                           color="white"
                         />
@@ -588,7 +589,11 @@ class ImageManipulatorView extends Component<Props, State> {
                           justifyContent: "center",
                         }}
                       >
-                        <MaterialIcons size={20} name="flip" color="white" />
+                        <MaterialIcons
+                          size={this.props.iconSize ?? 20}
+                          name="flip"
+                          color="white"
+                        />
                       </TouchableOpacity>
                       <TouchableOpacity
                         onPress={() => {
@@ -625,9 +630,7 @@ class ImageManipulatorView extends Component<Props, State> {
                         <Text
                           style={[
                             {
-                              fontWeight: "500",
                               color: "white",
-                              fontSize: 18,
                             },
                             this.props.btnTextsStyle,
                           ]}
@@ -673,9 +676,7 @@ class ImageManipulatorView extends Component<Props, State> {
                     <Text
                       style={[
                         {
-                          fontWeight: "500",
                           color: "white",
-                          fontSize: 18,
                         },
                         this.props.btnTextsStyle,
                       ]}

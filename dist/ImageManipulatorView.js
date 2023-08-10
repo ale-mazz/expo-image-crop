@@ -229,6 +229,7 @@ class ImageManipulatorView extends Component {
         this.mounted = false;
     }
     render() {
+        var _a, _b;
         const { isVisible, onPictureChosen, onBeforePictureChosen, borderColor, allowRotate = true, allowFlip = true, btnTexts, fixedMask, ratio, } = this.props;
         const { uri, base64, cropMode, processing } = this.state;
         const imageRatio = this.actualSize.height / this.actualSize.width;
@@ -313,7 +314,7 @@ class ImageManipulatorView extends Component {
                                     alignItems: "center",
                                     justifyContent: "center",
                                 } },
-                                React.createElement(MaterialIcons, { style: { transform: [{ rotate: "270deg" }] }, size: 20, name: "flip", color: "white" })))),
+                                React.createElement(MaterialIcons, { style: { transform: [{ rotate: "270deg" }] }, size: (_a = this.props.iconSize) !== null && _a !== void 0 ? _a : 20, name: "flip", color: "white" })))),
                         allowFlip && (React.createElement(View, { style: { flexDirection: "row" } },
                             React.createElement(TouchableOpacity, { onPress: () => this.onFlipImage(ImageManipulator.FlipType.Horizontal), style: {
                                     marginLeft: 10,
@@ -322,7 +323,7 @@ class ImageManipulatorView extends Component {
                                     alignItems: "center",
                                     justifyContent: "center",
                                 } },
-                                React.createElement(MaterialIcons, { size: 20, name: "flip", color: "white" })),
+                                React.createElement(MaterialIcons, { size: (_b = this.props.iconSize) !== null && _b !== void 0 ? _b : 20, name: "flip", color: "white" })),
                             React.createElement(TouchableOpacity, { onPress: () => {
                                     if (uri) {
                                         Image.getSize(uri, (width, height) => {
@@ -352,9 +353,7 @@ class ImageManipulatorView extends Component {
                                 } },
                                 React.createElement(Text, { style: [
                                         {
-                                            fontWeight: "500",
                                             color: "white",
-                                            fontSize: 18,
                                         },
                                         this.props.btnTextsStyle,
                                     ] }, btnTexts.done))))))) : (React.createElement(View, { style: {
@@ -377,11 +376,12 @@ class ImageManipulatorView extends Component {
                             processing
                                 ? this.props.icons.processing
                                 : this.props.icons.crop,
-                            React.createElement(Text, { style: {
-                                    fontWeight: "500",
-                                    color: "white",
-                                    fontSize: 18,
-                                } }, !processing ? btnTexts.crop : btnTexts.processing))))))),
+                            React.createElement(Text, { style: [
+                                    {
+                                        color: "white",
+                                    },
+                                    this.props.btnTextsStyle,
+                                ] }, !processing ? btnTexts.crop : btnTexts.processing))))))),
             React.createElement(View, { style: {
                     flex: 1,
                     backgroundColor: "black",
