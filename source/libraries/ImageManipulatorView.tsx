@@ -15,7 +15,8 @@ import * as ImageManipulator from "expo-image-manipulator";
 import * as FileSystem from "expo-file-system";
 import AutoHeightImage from "react-native-auto-height-image";
 import ImageCropOverlay from "./ImageCropOverlay";
-import { MaterialCommunityIcons, MaterialIcons } from "@expo/vector-icons";
+import { AntDesign, Feather } from "@expo/vector-icons";
+import { cross, crop, rotate, flipLeft, flipDown } from "./assets/images";
 
 const { width: screenWidth } = Dimensions.get("window");
 
@@ -71,7 +72,11 @@ type Props = {
   icons: {
     back?: ReactNode;
     crop?: ReactNode;
+    rotate?: ReactNode;
+    flipLeft?: ReactNode;
+    flipDown?: ReactNode;
     processing?: ReactNode;
+    confirm?: ReactNode;
   };
   saveOptions?: SaveOptions;
   photo: {
@@ -94,20 +99,24 @@ class ImageManipulatorView extends Component<Props, State> {
       processing: "Processing",
     },
     icons: {
-      back: <MaterialIcons size={24} name="arrow-back-ios" color="white" />,
-      crop: (
-        <MaterialCommunityIcons
-          name="crop-free"
-          style={{ marginRight: 5 }}
-          size={20}
+      back: <Image source={cross} style={{ width: 32, height: 32 }} />,
+      crop: <Image source={crop} style={{ width: 32, height: 32 }} />,
+      rotate: <Image source={rotate} style={{ width: 32, height: 32 }} />,
+      flipLeft: <Image source={flipLeft} style={{ width: 32, height: 32 }} />,
+      flipDown: <Image source={flipDown} style={{ width: 32, height: 32 }} />,
+      processing: (
+        <Feather
+          style={{ marginRight: 6 }}
+          name="loader"
+          size={32}
           color="white"
         />
       ),
-      processing: (
-        <MaterialIcons
-          style={{ marginRight: 5 }}
-          size={20}
-          name={"access-time"}
+      confirm: (
+        <AntDesign
+          style={{ marginRight: 6 }}
+          name="check"
+          size={24}
           color="white"
         />
       ),
@@ -530,11 +539,7 @@ class ImageManipulatorView extends Component<Props, State> {
                       justifyContent: "center",
                     }}
                   >
-                    <MaterialCommunityIcons
-                      size={20}
-                      name="crop"
-                      color="white"
-                    />
+                    {this.props.icons.crop}
                   </TouchableOpacity>
                   {allowRotate && (
                     <View style={{ flexDirection: "row" }}>
@@ -548,11 +553,7 @@ class ImageManipulatorView extends Component<Props, State> {
                           justifyContent: "center",
                         }}
                       >
-                        <MaterialCommunityIcons
-                          size={20}
-                          name="rotate-left"
-                          color="white"
-                        />
+                        {this.props.icons.rotate}
                       </TouchableOpacity>
                       <TouchableOpacity
                         onPress={() =>
@@ -566,12 +567,7 @@ class ImageManipulatorView extends Component<Props, State> {
                           justifyContent: "center",
                         }}
                       >
-                        <MaterialIcons
-                          style={{ transform: [{ rotate: "270deg" }] }}
-                          size={this.props.iconSize ?? 20}
-                          name="flip"
-                          color="white"
-                        />
+                        {this.props.icons.flipDown}
                       </TouchableOpacity>
                     </View>
                   )}
@@ -589,11 +585,7 @@ class ImageManipulatorView extends Component<Props, State> {
                           justifyContent: "center",
                         }}
                       >
-                        <MaterialIcons
-                          size={this.props.iconSize ?? 20}
-                          name="flip"
-                          color="white"
-                        />
+                        {this.props.icons.flipLeft}
                       </TouchableOpacity>
                       <TouchableOpacity
                         onPress={() => {
@@ -672,7 +664,7 @@ class ImageManipulatorView extends Component<Props, State> {
                   <View style={{ flexDirection: "row", alignItems: "center" }}>
                     {processing
                       ? this.props.icons.processing
-                      : this.props.icons.crop}
+                      : this.props.icons.confirm}
                     <Text
                       style={[
                         {
