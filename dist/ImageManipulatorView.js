@@ -13,7 +13,8 @@ import * as ImageManipulator from "expo-image-manipulator";
 import * as FileSystem from "expo-file-system";
 import AutoHeightImage from "react-native-auto-height-image";
 import ImageCropOverlay from "./ImageCropOverlay";
-import { MaterialCommunityIcons, MaterialIcons } from "@expo/vector-icons";
+import { AntDesign, Feather } from "@expo/vector-icons";
+import { cross, crop, rotate, flipLeft, flipDown } from "./assets/images";
 const { width: screenWidth } = Dimensions.get("window");
 LogBox.ignoreLogs([
     "componentWillReceiveProps",
@@ -229,7 +230,6 @@ class ImageManipulatorView extends Component {
         this.mounted = false;
     }
     render() {
-        var _a, _b;
         const { isVisible, onPictureChosen, onBeforePictureChosen, borderColor, allowRotate = true, allowFlip = true, btnTexts, fixedMask, ratio, } = this.props;
         const { uri, base64, cropMode, processing } = this.state;
         const imageRatio = this.actualSize.height / this.actualSize.width;
@@ -296,8 +296,7 @@ class ImageManipulatorView extends Component {
                                 height: 32,
                                 alignItems: "center",
                                 justifyContent: "center",
-                            } },
-                            React.createElement(MaterialCommunityIcons, { size: 20, name: "crop", color: "white" })),
+                            } }, this.props.icons.crop),
                         allowRotate && (React.createElement(View, { style: { flexDirection: "row" } },
                             React.createElement(TouchableOpacity, { onPress: () => this.onRotateImage(), style: {
                                     marginLeft: 10,
@@ -305,16 +304,14 @@ class ImageManipulatorView extends Component {
                                     height: 32,
                                     alignItems: "center",
                                     justifyContent: "center",
-                                } },
-                                React.createElement(MaterialCommunityIcons, { size: 20, name: "rotate-left", color: "white" })),
+                                } }, this.props.icons.rotate),
                             React.createElement(TouchableOpacity, { onPress: () => this.onFlipImage(ImageManipulator.FlipType.Vertical), style: {
                                     marginLeft: 10,
                                     width: 32,
                                     height: 32,
                                     alignItems: "center",
                                     justifyContent: "center",
-                                } },
-                                React.createElement(MaterialIcons, { style: { transform: [{ rotate: "270deg" }] }, size: (_a = this.props.iconSize) !== null && _a !== void 0 ? _a : 20, name: "flip", color: "white" })))),
+                                } }, this.props.icons.flipDown))),
                         allowFlip && (React.createElement(View, { style: { flexDirection: "row" } },
                             React.createElement(TouchableOpacity, { onPress: () => this.onFlipImage(ImageManipulator.FlipType.Horizontal), style: {
                                     marginLeft: 10,
@@ -322,8 +319,7 @@ class ImageManipulatorView extends Component {
                                     height: 32,
                                     alignItems: "center",
                                     justifyContent: "center",
-                                } },
-                                React.createElement(MaterialIcons, { size: (_b = this.props.iconSize) !== null && _b !== void 0 ? _b : 20, name: "flip", color: "white" })),
+                                } }, this.props.icons.flipLeft),
                             React.createElement(TouchableOpacity, { onPress: () => {
                                     if (uri) {
                                         Image.getSize(uri, (width, height) => {
@@ -375,7 +371,7 @@ class ImageManipulatorView extends Component {
                         React.createElement(View, { style: { flexDirection: "row", alignItems: "center" } },
                             processing
                                 ? this.props.icons.processing
-                                : this.props.icons.crop,
+                                : this.props.icons.confirm,
                             React.createElement(Text, { style: [
                                     {
                                         color: "white",
@@ -410,9 +406,13 @@ ImageManipulatorView.defaultProps = {
         processing: "Processing",
     },
     icons: {
-        back: React.createElement(MaterialIcons, { size: 24, name: "arrow-back-ios", color: "white" }),
-        crop: (React.createElement(MaterialCommunityIcons, { name: "crop-free", style: { marginRight: 5 }, size: 20, color: "white" })),
-        processing: (React.createElement(MaterialIcons, { style: { marginRight: 5 }, size: 20, name: "access-time", color: "white" })),
+        back: React.createElement(Image, { source: cross, style: { width: 32, height: 32 } }),
+        crop: React.createElement(Image, { source: crop, style: { width: 32, height: 32 } }),
+        rotate: React.createElement(Image, { source: rotate, style: { width: 32, height: 32 } }),
+        flipLeft: React.createElement(Image, { source: flipLeft, style: { width: 32, height: 32 } }),
+        flipDown: React.createElement(Image, { source: flipDown, style: { width: 32, height: 32 } }),
+        processing: (React.createElement(Feather, { style: { marginRight: 6 }, name: "loader", size: 32, color: "white" })),
+        confirm: (React.createElement(AntDesign, { style: { marginRight: 6 }, name: "check", size: 24, color: "white" })),
     },
     saveOptions: {
         compress: 1,
