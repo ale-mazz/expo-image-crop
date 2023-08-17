@@ -5,7 +5,7 @@
   "main": "index.js",
   "types": "index.d.ts",
   "scripts": {
-    "build": "tsc && copyfiles *.png dist/assets"
+    "build": "tsc"
   },
   "dependencies": {
     "@expo/vector-icons": "^13.0.0",
